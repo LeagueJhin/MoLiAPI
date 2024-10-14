@@ -1,9 +1,14 @@
-package com.bingchunmoli.api.weather.bean.enums
+package com.bingchunmoli.api.weather.bean.enums;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * @author bingchunmoli
  */
-enum class Code (val code: String, val text: String){
+@Getter
+@AllArgsConstructor
+public enum Code {
     /**
      * 和风天气code枚举
      */
@@ -17,4 +22,6 @@ enum class Code (val code: String, val text: String){
     TOO_FAST("429", "超过限定的QPM（每分钟访问次数）"),
     INTERNET("500", "无响应或超时");
 
+    private final String code;
+    private final String text;
 }

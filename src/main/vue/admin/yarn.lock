@@ -1022,6 +1022,11 @@ anymatch@~3.1.2:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
+aplayer-ts@^2.4.5:
+  version "2.4.5"
+  resolved "https://registry.npmjs.org/aplayer-ts/-/aplayer-ts-2.4.5.tgz#04872dafccad26645957f1a16bdc4a4c8dd0e14d"
+  integrity sha512-yijKWeJ9LDZUtd6a+oJDxYYkzzPoG1g3syAPgcnO1tIxs5i0IDuP7yehy3Hxtwmf1skB4x7nVB00MS3R/nc5QA==
+
 argparse@^2.0.1:
   version "2.0.1"
   resolved "https://repo.huaweicloud.com/repository/npm/argparse/-/argparse-2.0.1.tgz#246f50f3ca78a3240f6c997e8a9bd1eac49e4b38"

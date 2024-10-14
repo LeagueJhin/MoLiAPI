@@ -5,10 +5,21 @@
 <mapper namespace="com.bingchunmoli.api.netease.mapper.NeteaseMusicSongMapper">
 
     <resultMap id="BaseResultMap" type="com.bingchunmoli.api.netease.bean.NeteaseMusicSong">
-            <id property="id" column="id" jdbcType="INTEGER"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="thirdId" column="third_id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="albumId" column="album_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="NeteaseMusicSongVO" type="com.bingchunmoli.api.netease.bean.NeteaseMusicSongVO">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="thirdId" column="third_id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="albumId" column="album_id" jdbcType="INTEGER"/>
+        <result property="picUrl" column="pic_url" jdbcType="INTEGER"/>
+        <result property="publishTime" column="publish_time" jdbcType="INTEGER"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <association select="getNickname" property="nickname" column="user_id"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -18,6 +29,30 @@
         insert into netease_music_song_user(user_id, song_id) values
         <foreach collection="userIds" item="item" separator=",">
             (${item}, ${songId})
-            </foreach>
+        </foreach>
     </insert>
+
+    <select id="selectRandomSong" resultType="com.bingchunmoli.api.netease.bean.NeteaseMusicSong">
+        SELECT id, third_id, `name`, album_id, playlist_id FROM netease_music_song
+        ORDER BY RAND()
+        LIMIT 1
+    </select>
+
+    <select id="getSongUser" resultType="java.lang.Integer">
+        select user_id from netease_music_song_user
+        where song_id = #{id}
+    </select>
+
+    <select id="getMusicSongList" resultMap="NeteaseMusicSongVO">
+        select s.id, s.third_id, s.`name`, album_id, s.playlist_id, a.pic_url, a.publish_time, a.type, su.user_id
+        from netease_music_song s join netease_music_album a on a.id = s.album_id
+                                  left join netease_music_song_user su on su.song_id = s.id
+        where s.playlist_id = #{id}
+    </select>
+
+    <select id="getNickname" resultType="String">
+        select nickname from netease_music_user
+        where id = #{id}
+        limit 1
+    </select>
 </mapper>

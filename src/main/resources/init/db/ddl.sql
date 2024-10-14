@@ -144,6 +144,7 @@ CREATE TABLE IF NOT EXISTS netease_music_song
     third_id bigint             null,
     name     varchar(50)        NOT NULL,
     album_id int                null comment '专辑Id',
+    playlist_id int          null comment '歌单id',
     CONSTRAINT netease_music_music_PK PRIMARY KEY (id)
 ) COMMENT ='歌曲';
 

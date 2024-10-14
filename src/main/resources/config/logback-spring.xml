@@ -141,9 +141,10 @@
         <appender-ref ref="STDOUT"/> <!-- 控制台输出 -->
     </root>
 
-    <logger name="com.bingchunmoli" level="trace">
-        <appender-ref ref="file" additivity="false"/>
+    <logger name="com.bingchunmoli" level="debug">
+        <appender-ref ref="file" additivity="true"/>
     </logger>
+
     <springProfile name="prod">
         <root level="info">
             <appender-ref ref="LOKI" />

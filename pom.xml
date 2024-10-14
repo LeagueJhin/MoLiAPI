@@ -5,19 +5,19 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.3</version>
+        <version>3.3.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>com.bingchunmoli</groupId>
     <artifactId>moliapi</artifactId>
-    <version>3.15.8</version>
+    <version>3.15.9</version>
     <name>MoLiApi</name>
     <description>MoLiApi</description>
 
     <properties>
         <java.version>17</java.version>
-        <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <mybatis-plus.version>3.5.8</mybatis-plus.version>
         <docker-plugin.version>1.4.13</docker-plugin.version>
         <hutool.version>5.8.32</hutool.version>
         <zxing.version>3.5.3</zxing.version>
@@ -25,10 +25,10 @@
         <h2.version>2.3.232</h2.version>
         <ip-info.version>2.2.0</ip-info.version>
         <knife4j.version>4.5.0</knife4j.version>
-        <tencent-cloud-api.version>3.1.1069</tencent-cloud-api.version>
+        <tencent-cloud-api.version>3.1.1114</tencent-cloud-api.version>
         <kotlin.version>2.0.20</kotlin.version>
         <firebase-admin.version>9.3.0</firebase-admin.version>
-        <loki-logback.version>1.5.1</loki-logback.version>
+        <loki-logback.version>1.5.2</loki-logback.version>
     </properties>
 
     <dependencies>
@@ -121,24 +121,6 @@
             <version>${tencent-cloud-api.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-kotlin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-reflect</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test</artifactId>
-            <version>${kotlin.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-indexer</artifactId>
         </dependency>
@@ -216,50 +198,6 @@
                         </exclude>
                     </excludes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <jvmTarget>1.8</jvmTarget>
-                    <args>-Xjsr305=strict</args>
-                    <compilerPlugins>
-                        <plugin>lombok</plugin>
-                        <plugin>spring</plugin>
-                    </compilerPlugins>
-                    <pluginOptions>
-                        <option>lombok:config=${project.basedir}/lombok.config</option>
-                    </pluginOptions>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-allopen</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-maven-lombok</artifactId>
-                        <version>${kotlin.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>

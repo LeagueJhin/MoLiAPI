@@ -16,6 +16,6 @@ public interface YiYanMapper extends BaseMapper<YiYan> {
      * randomYiYan
      * @return yiyan
      */
-    @Select("SELECT * FROM yi_yan as t1 WHERE t1.id>=(RAND()*(SELECT MAX(id) FROM yi_yan))LIMIT 1")
+    @Select("SELECT * FROM yi_yan as t1 WHERE t1.id>=(RAND()*(SELECT MAX(id) FROM yi_yan)) LIMIT 1")
     YiYan findRandom();
 }

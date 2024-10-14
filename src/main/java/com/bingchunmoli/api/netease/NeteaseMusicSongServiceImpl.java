@@ -1,16 +1,17 @@
 package com.bingchunmoli.api.netease;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.bingchunmoli.api.netease.bean.NeteaseMusicSong;
+import com.bingchunmoli.api.netease.bean.NeteaseMusicSongVO;
 import com.bingchunmoli.api.netease.mapper.NeteaseMusicSongMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
 * @author MoLi
@@ -21,7 +22,6 @@ public class NeteaseMusicSongServiceImpl extends ServiceImpl<NeteaseMusicSongMap
     private final NeteaseMusicUserService neteaseMusicUserService;
 
     @Override
-    @Transactional
     public void saveBatchAndChild(List<NeteaseMusicSong> songs) {
         if (songs == null || songs.isEmpty()) {
             return;
@@ -35,23 +35,26 @@ public class NeteaseMusicSongServiceImpl extends ServiceImpl<NeteaseMusicSongMap
                 getBaseMapper().saveSongUser(song.getId(), userIds);
             }
         }else {
-            List<NeteaseMusicSong> list = songs.stream().filter(v -> {
-                for (NeteaseMusicSong song : dbSongs) {
-                    if (Objects.equals(song.getId(), v.getId())) {
-                        return false;
-                    }
-                }
-                return true;
-            }).toList();
-            for (NeteaseMusicSong song : list) {
+            ((NeteaseMusicSongService) AopContext.currentProxy()).updateBatchById(songs.stream().filter(v -> v.getId() != null).collect(Collectors.toList()));
+            ((NeteaseMusicSongService) AopContext.currentProxy()).saveBatch(songs.stream().filter(v -> v.getId() == null).collect(Collectors.toList()));
+            for (NeteaseMusicSong song : songs) {
                 List<Integer> userIds = neteaseMusicUserService.getIdBatch(song.getArtists());
-                getBaseMapper().saveSongUser(song.getId(), userIds);
+                List<Integer> alreadyExistsUserIds = getBaseMapper().getSongUser(song.getId());
+                List<Integer> saveUserIds = alreadyExistsUserIds.stream().filter(v -> !userIds.contains(v)).toList();
+                if (CollUtil.isNotEmpty(saveUserIds)) {
+                    getBaseMapper().saveSongUser(song.getId(), saveUserIds);
+                }
             }
         }
+    }
 
+    @Override
+    public NeteaseMusicSong getRandomSong() {
+        return getBaseMapper().selectRandomSong();
+    }
+
+    @Override
+    public List<NeteaseMusicSongVO> getMusicSongList(String id) {
+        return getBaseMapper().getMusicSongList(id);
     }
 }
-
-
-
-

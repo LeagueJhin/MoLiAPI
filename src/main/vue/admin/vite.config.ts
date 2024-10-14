@@ -29,8 +29,8 @@ export default defineConfig({
         host: true,
         proxy: {
             '/api': {
-                target: 'http://127.0.0.1:8090',
-                // target: 'https://api.bingchunmoli.com/',
+                // target: 'http://127.0.0.1:8090',
+                target: 'https://api.bingchunmoli.com/',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, '')
             }

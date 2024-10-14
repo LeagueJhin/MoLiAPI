@@ -9,6 +9,7 @@ import com.bingchunmoli.api.push.bean.Message;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -25,6 +26,7 @@ public class MessageEvenListener implements ApplicationListener<MessageEven> {
         this.pushLogService = pushLogService;
     }
 
+    @Async
     @Override
     public void onApplicationEvent(@NotNull MessageEven event) {
         Message message = event.getMessage();

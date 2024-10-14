@@ -2,17 +2,14 @@ package com.bingchunmoli.api.netease;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.bingchunmoli.api.config.ApiConfig;
-import com.bingchunmoli.api.netease.bean.NeteaseMusicAlbum;
-import com.bingchunmoli.api.netease.bean.NeteaseMusicPlaylist;
-import com.bingchunmoli.api.netease.bean.NeteaseMusicSong;
-import com.bingchunmoli.api.netease.bean.NeteaseMusicUser;
+import com.bingchunmoli.api.netease.bean.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -48,18 +45,27 @@ public class MusicService {
      * @param cookie cookie
      * @return 歌单实体
      */
-    public PlayListBO getPlayListInfo(String id, String cookie){
-        Collection<BasicHeader> defaultHeader = List.of(new BasicHeader("cookie", cookie));
+    public PlayListBO getPlayListInfo(@Valid @NotBlank String id, String cookie){
+        Collection<BasicHeader> defaultHeader = List.of(new BasicHeader("cookie", cookie),
+                new BasicHeader("referer", "https://music.163.com/"),
+                new BasicHeader("accept", "*/*"),
+                new BasicHeader("accept-language", "zh,zh-US;q=0.9,zh-SG;q=0.8,en-SG;q=0.7,en;q=0.6,zh-CN;q=0.5"),
+                new BasicHeader("pragma", "no-cache"),
+                new BasicHeader("sec-fetch-dest", "script"),
+                new BasicHeader("sec-fetch-mode", "no-cors"),
+                new BasicHeader("sec-fetch-site", "same-site"),
+                new BasicHeader("sec-ch-ua", "\n" +
+                        "\"Google Chrome\";v=\"129\", \"Not=A?Brand\";v=\"8\", \"Chromium\";v=\"129\""),
+                new BasicHeader("sec-ch-ua-platform", "\"windows\""),
+                new BasicHeader("origin", "https://music.163.com/"),
+                new BasicHeader("sec-ch-ua-mobile", "?0"));
         try (CloseableHttpClient httpClient = HttpClientBuilder.create()
                 .setDefaultHeaders(defaultHeader)
-                .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-                .setDefaultRequestConfig(RequestConfig.custom()
-                        .setCookieSpec(CookieSpecs.STANDARD).build())
+                .setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")
                 .build()){
             HttpRequest request = new HttpGet( "/api/playlist/detail?id=" + id);
             return httpClient.execute(baseHost, request, res -> {
                 String string = EntityUtils.toString(res.getEntity());
-                EntityUtils.consume(res.getEntity());
                 return om.readValue(string, PlayListBO.class);
             });
         } catch (Exception e) {
@@ -113,11 +119,15 @@ public class MusicService {
                     .name(album.getName())
                     .picUrl(album.getPicUrl())
                     .type(album.getType())
+                    .userId(album.getArtist().getId())
                     .publishTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(album.getPublishTime()), ZoneId.systemDefault())).build();
             NeteaseMusicAlbum dbAlbum = albumService.getOne(new LambdaQueryWrapper<NeteaseMusicAlbum>()
                     .eq(NeteaseMusicAlbum::getThirdId, musicAlbum.getThirdId()));
             if (dbAlbum == null) {
                 albumService.save(musicAlbum);
+            }else {
+                musicAlbum.setId(dbAlbum.getId());
+                albumService.updateById(musicAlbum);
             }
             List<PlayListBO.ResultDTO.TracksDTO.ArtistsDTO> artists = track.getArtists();
             List<NeteaseMusicUser> musicUserList = new ArrayList<>(artists.size());
@@ -134,6 +144,7 @@ public class MusicService {
                     .thirdId(Long.valueOf(track.getId()))
                     .albumId(musicAlbum.getId())
                     .artists(musicUserList)
+                    .playlistId(musicPlaylist.getId())
                     .build();
             songs.add(song);
         }
@@ -143,5 +154,13 @@ public class MusicService {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getRandomMusicId() {
+        return String.valueOf(songService.getRandomSong().getThirdId());
+    }
+
+    public List<NeteaseMusicSongVO> getMusicSongList(String id) {
+        return songService.getMusicSongList(id);
     }
 }

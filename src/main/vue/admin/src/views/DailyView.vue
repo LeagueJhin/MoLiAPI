@@ -50,6 +50,17 @@ const query = async () => {
   dailyMap.value = await get(requestUrl)
 }
 query()
+
+const randomMusic = async () => {
+  const musicLink = await get('music/random', {
+    headers: {
+      'cache-control': 'no-store',
+      'pragma': 'no-store',
+      'sec-fetch-mode': 'no-cors'
+    }
+  })
+  window.open(musicLink, '_blank')
+}
 </script>
 
 <template>
@@ -104,6 +115,7 @@ query()
           </div>
         </div>
         <el-button :disabled="signed" round type="success" @click="sign">签到</el-button>
+        <el-button @click="randomMusic"> 随机一首音乐</el-button>
       </template>
     </el-calendar>
   </div>

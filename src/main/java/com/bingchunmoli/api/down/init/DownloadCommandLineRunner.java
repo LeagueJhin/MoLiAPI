@@ -6,6 +6,7 @@ import com.bingchunmoli.api.down.task.RefreshFav;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
+@Profile("prod")
 @RequiredArgsConstructor
 public class DownloadCommandLineRunner implements CommandLineRunner {
     //备用

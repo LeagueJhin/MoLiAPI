@@ -40,6 +40,12 @@ docker-compose up -d
 16. 网易云音乐歌单收藏
 17. b站收藏获取,通知失效视频
 
+## 后台管理功能
+1. 签到
+2. 签到日志查询
+3. 随机music
+4. 歌单歌曲
+
 ## 启用所有功能
 1. 添加配置文件(~/.api/目录下) application.yml
 2. 下载application-template.yml 并修改文件名为application-default.yml

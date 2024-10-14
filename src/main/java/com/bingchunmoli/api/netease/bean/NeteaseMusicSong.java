@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,6 +19,8 @@ import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName(value ="netease_music_song")
 public class NeteaseMusicSong implements Serializable {
     /**
@@ -42,6 +46,12 @@ public class NeteaseMusicSong implements Serializable {
      */
     @TableField(value = "album_id")
     private Integer albumId;
+
+    /**
+     * 歌单id
+     */
+    @TableField("playlist_id")
+    private Integer playlistId;
 
     @TableField(exist = false)
     private List<NeteaseMusicUser> artists;
