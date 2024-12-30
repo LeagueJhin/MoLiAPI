@@ -19,7 +19,7 @@
         <java.version>17</java.version>
         <mybatis-plus.version>3.5.9</mybatis-plus.version>
         <docker-plugin.version>1.4.13</docker-plugin.version>
-        <hutool.version>5.8.34</hutool.version>
+        <hutool.version>5.8.35</hutool.version>
         <zxing.version>3.5.3</zxing.version>
         <emoji.version>5.1.1</emoji.version>
         <h2.version>2.3.232</h2.version>
